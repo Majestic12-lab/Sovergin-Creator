@@ -1,5 +1,5 @@
 import { Composition } from 'remotion'
-import { VideoComposition } from '@/components/remotion/VideoComposition'
+import { VideoComposition } from '@/components/remotion/Composition'
 import { DEFAULT_PROJECT } from '@/types/video'
 import {
   COMPOSITION_ID,
@@ -19,7 +19,10 @@ export function RemotionRoot() {
       fps={FPS}
       durationInFrames={calcDurationFrames(DEFAULT_PROJECT.words)}
       defaultProps={{
-        project: DEFAULT_PROJECT,
+        words: DEFAULT_PROJECT.words,
+        audioUrl: DEFAULT_PROJECT.audioUrl,
+        backgroundUrl: DEFAULT_PROJECT.backgroundUrl,
+        captionStyle: DEFAULT_PROJECT.captionStyle,
       }}
     />
   )
