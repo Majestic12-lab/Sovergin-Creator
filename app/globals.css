@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#0f0f0f] text-white;
+  }
+}
+
+:root {
+  --video-width: 1080px;
+  --video-height: 1920px;
+  --caption-z: 10;
+  --background-z: 0;
+  --audio-z: 5;
+}
+
+.video-safe-area {
+  aspect-ratio: 9 / 16;
+  width: 100%;
+  max-width: 390px;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+/* Scrollbar styling for dark panels */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #534AB7 #2a2a2a;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #534AB7;
+  border-radius: 3px;
+}
