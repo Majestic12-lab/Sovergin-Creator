@@ -14,10 +14,12 @@
     "url": "http://local_proxy@127.0.0.1:40593/git/Majestic12-lab/Sovergin-Creator"
   },
   "dependencies": {
+    "@remotion/player": "^4.0.447",
     "next": "15.3.0",
     "openai": "^4.77.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "remotion": "^4.0.447",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
