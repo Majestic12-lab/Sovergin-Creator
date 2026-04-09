@@ -1,0 +1,23 @@
+{
+  "name": "sovergin-creator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://local_proxy@127.0.0.1:40593/git/Majestic12-lab/Sovergin-Creator"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "next": "^16.2.3",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^6.0.2",
+    "zustand": "^5.0.12"
+  }
+}
