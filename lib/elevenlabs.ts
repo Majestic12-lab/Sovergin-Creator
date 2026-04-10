@@ -1,9 +1,9 @@
 import OpenAI from 'openai'
 
 export const VOICE_IDS = {
-  nova:    'nova',
-  onyx:    'onyx',
-  echo:    'echo',
+  nova: 'nova',
+  onyx: 'onyx',
+  echo: 'echo',
   shimmer: 'shimmer',
 } as const
 
