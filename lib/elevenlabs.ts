@@ -1,42 +1,24 @@
+import OpenAI from 'openai'
+
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+
 export const VOICE_IDS = {
-  nova:    '21m00Tcm4TlvDq8ikWAM',
-  onyx:    'AZnzlk1XvdvUeBnXmlld',
-  echo:    'MF3mGyEYCl7XYWbV9V6O',
-  shimmer: 'EXAVITQu4vr4xnSDxMaL',
+  nova:    'nova',
+  onyx:    'onyx',
+  echo:    'echo',
+  shimmer: 'shimmer',
 } as const
 
 export type VoiceName = keyof typeof VOICE_IDS
 
 export async function generateVoice(text: string, voiceId: string): Promise<Buffer> {
   try {
-    const resolvedId = VOICE_IDS[voiceId as VoiceName] ?? voiceId
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 25000)
-    const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${resolvedId}`,
-      {
-        method: 'POST',
-        headers: {
-          'xi-api-key': process.env.ELEVENLABS_API_KEY ?? '',
-          'Content-Type': 'application/json',
-          'Accept': 'audio/mpeg',
-        },
-        body: JSON.stringify({
-          text,
-          model_id: 'eleven_multilingual_v2',
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.75,
-          },
-        }),
-        signal: controller.signal,
-      }
-    )
-    clearTimeout(timeout)
-
-    if (!response.ok) {
-      throw new Error(`ElevenLabs API returned status ${response.status}`)
-    }
+    const voice = VOICE_IDS[voiceId as VoiceName] ?? 'nova'
+    const response = await client.audio.speech.create({
+      model: 'tts-1',
+      voice,
+      input: text,
+    })
 
     const arrayBuffer = await response.arrayBuffer()
     return Buffer.from(arrayBuffer)
