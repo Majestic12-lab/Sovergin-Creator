@@ -8,6 +8,8 @@ import { fetchBackgroundClip } from '@/lib/pexels'
 import { WordWithTimestamp, VideoScript } from '@/types/video'
 
 export async function POST(request: NextRequest) {
+  console.log('ELEVEN KEY START:', process.env.ELEVENLABS_API_KEY?.substring(0, 10))
+  console.log('TEST KEY START:', process.env.TEST_ELEVEN?.substring(0, 10))
   try {
     const body = await request.json() as { prompt?: string; voiceId?: string; theme?: string }
     const { prompt, voiceId = 'nova', theme = 'default' } = body
