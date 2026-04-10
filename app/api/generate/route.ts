@@ -28,6 +28,7 @@ export async function POST(request: NextRequest) {
 
     // 4. Generate voice
     const audioBuffer: Buffer = await generateVoice(script.fullScript, voiceId)
+    console.log('[2/4] Voice generated successfully')
     console.log('[2/4] Voice generated, bytes:', audioBuffer.length)
 
     // 5. Write audio to temp file

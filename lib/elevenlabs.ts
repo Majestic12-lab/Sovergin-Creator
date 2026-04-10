@@ -10,6 +10,8 @@ export type VoiceName = keyof typeof VOICE_IDS
 export async function generateVoice(text: string, voiceId: string): Promise<Buffer> {
   try {
     const resolvedId = VOICE_IDS[voiceId as VoiceName] ?? voiceId
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 25000)
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${resolvedId}`,
       {
@@ -27,8 +29,10 @@ export async function generateVoice(text: string, voiceId: string): Promise<Buff
             similarity_boost: 0.75,
           },
         }),
+        signal: controller.signal,
       }
     )
+    clearTimeout(timeout)
 
     if (!response.ok) {
       throw new Error(`ElevenLabs API returned status ${response.status}`)
