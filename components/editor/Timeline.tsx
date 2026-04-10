@@ -5,9 +5,9 @@ import { useVideoStore } from '@/store/useVideoStore'
 import { framesToSeconds, secondsToFrames } from '@/components/remotion/utils/scaling'
 
 function formatTime(seconds: number): string {
-  const m = Math.floor(seconds / 60)
-  const s = Math.floor(seconds % 60)
-  return `${m}:${s.toString().padStart(2, '0')}`
+  const mins = Math.floor(seconds / 60)
+  const secs = Math.floor(seconds % 60)
+  return `${mins}:${secs.toString().padStart(2, '0')}`
 }
 
 export function Timeline() {
@@ -18,25 +18,31 @@ export function Timeline() {
 
   const currentSecond = framesToSeconds(currentFrame)
 
-  const isEmpty = durationSeconds === 0
+  const duration = durationSeconds > 0
+    ? durationSeconds
+    : words.length > 0
+      ? words[words.length - 1].end
+      : 0
+
+  const isEmpty = duration === 0
 
   const ticks = useMemo(() =>
     words.map((w) => ({
       index: w.index,
-      pct: durationSeconds > 0 ? (w.start / durationSeconds) * 100 : 0,
+      pct: duration > 0 ? (w.start / duration) * 100 : 0,
     })),
-    [words, durationSeconds]
+    [words, duration]
   )
 
   function handleTrackClick(e: React.MouseEvent<HTMLDivElement>) {
     const rect = e.currentTarget.getBoundingClientRect()
     const fraction = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width))
-    const frames = secondsToFrames(fraction * durationSeconds)
+    const frames = secondsToFrames(fraction * duration)
     setCurrentFrame(frames)
   }
 
-  const playheadPct = durationSeconds > 0
-    ? Math.min(100, (currentSecond / durationSeconds) * 100)
+  const playheadPct = duration > 0
+    ? Math.min(100, (currentSecond / duration) * 100)
     : 0
 
   return (
@@ -62,7 +68,7 @@ export function Timeline() {
           minWidth: '80px',
         }}
       >
-        {formatTime(currentSecond)} / {formatTime(durationSeconds)}
+        {formatTime(currentSecond)} / {formatTime(duration)}
       </span>
 
       {/* Track */}

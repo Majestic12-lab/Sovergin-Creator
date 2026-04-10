@@ -6,5 +6,5 @@ interface AudioLayerProps {
 
 export function AudioLayer({ audioUrl }: AudioLayerProps) {
   if (!audioUrl) return null
-  return <Audio src={audioUrl} />
+  return <Audio src={audioUrl} pauseWhenBuffering />
 }
