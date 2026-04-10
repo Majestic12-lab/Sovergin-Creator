@@ -9,6 +9,8 @@ export type VoiceName = keyof typeof VOICE_IDS
 
 export async function generateVoice(text: string, voiceId: string): Promise<Buffer> {
   try {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 25000)
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_IDS[voiceId as VoiceName] ?? voiceId}`,
       {
@@ -17,7 +19,9 @@ export async function generateVoice(text: string, voiceId: string): Promise<Buff
           'xi-api-key': process.env.ELEVENLABS_API_KEY ?? '',
           'Content-Type': 'application/json',
           'Accept': 'audio/mpeg',
+
         },
+        signal: controller.signal,
         body: JSON.stringify({
           text,
           model_id: 'eleven_multilingual_v2',
