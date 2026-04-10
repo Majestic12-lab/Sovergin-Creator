@@ -10,7 +10,7 @@ export type VoiceName = keyof typeof VOICE_IDS
 export async function generateVoice(text: string, voiceId: string): Promise<Buffer> {
   try {
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+      `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_IDS[voiceId as VoiceName] ?? voiceId}`,
       {
         method: 'POST',
         headers: {
