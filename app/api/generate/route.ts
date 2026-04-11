@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     const words: WordWithTimestamp[] = await transcribeAudio(audioBuffer)
     console.log('[3/4] Transcribed words:', words.length)
 
-    const backgroundUrl: string = await fetchBackgroundClip(script.keywords)
+    const backgroundUrl: string = await fetchBackgroundClip(script.keywords, theme)
     console.log('[4/4] Background clip found')
 
     const durationSeconds = words.length > 0 ? words[words.length - 1].end : 0
