@@ -120,6 +120,13 @@ export const useVideoStore = create<VideoStore>()(
     }),
     {
       name: 'sovereign-creator-project',
+      version: 1,
+      migrate(state: any) {
+        if (!state.project.customBackgroundUrl) {
+          state.project.customBackgroundUrl = ''
+        }
+        return state
+      },
       partialize: (state) => ({ project: state.project }),
     }
   )
