@@ -32,8 +32,10 @@ export default function StudioPage() {
         return
       }
 
-      // Space — pass through to Remotion player iframe
+      // Space — only intercept if not typing in a text input
       if (e.key === ' ') {
+        const tag = (e.target as HTMLElement).tagName
+        if (tag === 'TEXTAREA' || tag === 'INPUT') return
         e.preventDefault()
         const iframe = document.querySelector<HTMLIFrameElement>('iframe')
         if (iframe?.contentWindow) {
