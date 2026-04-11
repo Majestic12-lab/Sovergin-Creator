@@ -1,19 +1,20 @@
 import { Composition } from 'remotion'
-import { VideoComposition } from '@/components/remotion/Composition'
-import { DEFAULT_PROJECT } from '@/types/video'
+import { VideoComposition } from './Composition'
+import type { ComponentType } from 'react'
+import { DEFAULT_PROJECT } from '../../types/video'
 import {
   COMPOSITION_ID,
   COMPOSITION_WIDTH,
   COMPOSITION_HEIGHT,
   FPS,
   calcDurationFrames,
-} from '@/components/remotion/utils/scaling'
+} from './utils/scaling'
 
 export function RemotionRoot() {
   return (
     <Composition
       id={COMPOSITION_ID}
-      component={VideoComposition}
+      component={VideoComposition as unknown as ComponentType<Record<string, unknown>>}
       width={COMPOSITION_WIDTH}
       height={COMPOSITION_HEIGHT}
       fps={FPS}

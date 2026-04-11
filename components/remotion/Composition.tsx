@@ -1,8 +1,8 @@
 import { AbsoluteFill } from 'remotion'
-import { WordWithTimestamp, CaptionStyle } from '@/types/video'
-import { Background } from '@/components/remotion/Layers/Background'
-import { AudioLayer } from '@/components/remotion/Layers/Audio'
-import { Captions } from '@/components/remotion/Layers/Captions'
+import { WordWithTimestamp, CaptionStyle } from '../../types/video'
+import { Background } from './Layers/Background'
+import { AudioLayer } from './Layers/Audio'
+import { Captions } from './Layers/Captions'
 
 export interface VideoCompositionProps {
   words: WordWithTimestamp[]

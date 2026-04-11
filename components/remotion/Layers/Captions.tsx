@@ -1,6 +1,6 @@
 import { useCurrentFrame, useVideoConfig, AbsoluteFill, spring, interpolate } from 'remotion'
-import { WordWithTimestamp, CaptionStyle } from '@/types/video'
-import { getPositionY, COMPOSITION_HEIGHT } from '@/components/remotion/utils/scaling'
+import { WordWithTimestamp, CaptionStyle } from '../../../types/video'
+import { getPositionY, COMPOSITION_HEIGHT } from '../utils/scaling'
 
 interface CaptionsProps {
   words: WordWithTimestamp[]
