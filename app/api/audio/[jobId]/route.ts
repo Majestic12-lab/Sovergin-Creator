@@ -1,24 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
+import { getAudioSignedUrl } from '@/lib/r2'
 
 export async function GET(
-  _request: NextRequest,
-  { params }: { params: Promise<{ jobId: string }> }
+  _req: NextRequest,
+  { params }: { params: { jobId: string } }
 ) {
-  const { jobId } = await params
-  const audioPath = path.join('/tmp', `audio-${jobId}.mp3`)
-
   try {
-    const file = fs.readFileSync(audioPath)
-    return new NextResponse(file, {
-      status: 200,
-      headers: {
-        'Content-Type': 'audio/mpeg',
-        'Content-Length': String(file.length),
-      },
-    })
-  } catch {
-    return NextResponse.json({ error: 'Audio file not found' }, { status: 404 })
+    const signedUrl = await getAudioSignedUrl(params.jobId)
+    return NextResponse.redirect(signedUrl)
+  } catch (err) {
+    console.error('R2 audio fetch error:', err)
+    return NextResponse.json({ error: 'Audio not found' }, { status: 404 })
   }
 }

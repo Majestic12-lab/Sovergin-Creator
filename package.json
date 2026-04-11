@@ -14,6 +14,8 @@
     "url": "http://local_proxy@127.0.0.1:40593/git/Majestic12-lab/Sovergin-Creator"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1029.0",
+    "@aws-sdk/s3-request-presigner": "^3.1029.0",
     "@remotion/player": "^4.0.447",
     "lucide-react": "^1.8.0",
     "next": "^16.2.3",
