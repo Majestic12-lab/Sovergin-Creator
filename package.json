@@ -31,7 +31,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "remotion": "^4.0.447",
-    "zod": "4.3.6",
+    "zod": "3.25.76",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
@@ -40,8 +40,5 @@
     "@types/react-dom": "^19.0.0",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.7.0"
-  },
-  "overrides": {
-    "zod": "3.25.76"
   }
 }
