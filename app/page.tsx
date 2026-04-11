@@ -1,158 +1,166 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 
-// ─── Design tokens ───────────────────────────────────────────────
-const C = {
-  bg:           '#080808',
-  accent:       '#534AB7',
-  accentLight:  '#7F77DD',
-  textPrimary:  '#ffffff',
-  textSecondary:'#666666',
-  textMuted:    '#444444',
-  cardBg:       '#111111',
-  cardBorder:   '#1e1e1e',
-}
+// ─── Tokens ──────────────────────────────────────────────────────
+const BG         = '#080808'
+const CARD_BG    = '#111111'
+const CARD_BDR   = '#1e1e1e'
+const PURPLE     = '#534AB7'
+const PURPLE_LT  = '#7F77DD'
+const TEXT_PRI   = '#ffffff'
+const TEXT_SEC   = '#666666'
+const TEXT_MUT   = '#444444'
+
+// ─── Shared style helpers ─────────────────────────────────────────
+const syne = 'Syne, sans-serif'
+const inter = 'Inter, sans-serif'
 
 const gradientText: React.CSSProperties = {
-  background: 'linear-gradient(135deg, #7F77DD, #C084FC, #F472B6)',
+  background: 'linear-gradient(135deg, #7F77DD 0%, #C084FC 50%, #F472B6 100%)',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
 }
 
-const syneFont = 'Syne, sans-serif'
-const interFont = 'Inter, sans-serif'
-
-// ─── Reusable button styles ───────────────────────────────────────
-const btnPrimary: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: '6px',
-  padding: '12px 24px',
-  background: C.accent,
-  color: C.textPrimary,
+const sectionDivider: React.CSSProperties = {
+  height: '1px',
+  background: 'linear-gradient(90deg, transparent, #2a2a2a, transparent)',
   border: 'none',
-  borderRadius: '8px',
-  fontSize: '15px',
-  fontWeight: 500,
-  fontFamily: interFont,
-  cursor: 'pointer',
-  textDecoration: 'none',
-  transition: 'background 0.2s, transform 0.15s',
+  margin: 0,
 }
 
-const btnGhost: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: '6px',
-  padding: '12px 24px',
-  background: 'transparent',
-  color: C.textPrimary,
-  border: `1px solid ${C.cardBorder}`,
-  borderRadius: '8px',
-  fontSize: '15px',
-  fontWeight: 400,
-  fontFamily: interFont,
-  cursor: 'pointer',
-  textDecoration: 'none',
-  transition: 'border-color 0.2s, color 0.2s',
+// ─── Data ─────────────────────────────────────────────────────────
+const FEATURES = [
+  { icon: '🧠', title: 'AI Script Generation',    desc: 'GPT-4 writes your hook, body, and CTA optimised for short-form engagement.' },
+  { icon: '🎙️', title: 'Natural Voiceovers',      desc: '4 AI voices (Nova, Onyx, Echo, Shimmer) with realistic tone and pacing.' },
+  { icon: '✏️', title: 'Click-to-Edit Captions',  desc: 'Click any word in the preview to edit it. Full caption style control.' },
+  { icon: '🎨', title: 'Caption Styles',           desc: 'Classic, Fire, Neon, Minimal, Bold Drop, Typewriter — with animations.' },
+  { icon: '🎬', title: 'Background Video',         desc: 'Paste your own footage URL or pick a theme. Your content, your style.' },
+  { icon: '⚡', title: 'Instant Preview',          desc: 'Live Remotion preview updates in real time as you make changes.' },
+]
+
+const STEPS = [
+  { n: '01', title: 'Describe your video',  desc: 'Type a topic, idea, or paste your own script into the prompt box.' },
+  { n: '02', title: 'AI does the work',     desc: 'Script, voice, captions, and background are generated automatically.' },
+  { n: '03', title: 'Customise & export',   desc: 'Tweak captions, swap backgrounds, adjust style — then download.' },
+]
+
+// ─── Sub-components ────────────────────────────────────────────────
+function PurpleButton({ href, children }: { href: string; children: React.ReactNode }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <Link
+      href={href}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        padding: '13px 26px',
+        background: PURPLE,
+        color: TEXT_PRI,
+        borderRadius: '10px',
+        fontSize: '15px',
+        fontWeight: 500,
+        fontFamily: inter,
+        textDecoration: 'none',
+        transition: 'box-shadow 0.2s, transform 0.2s',
+        boxShadow: hovered ? '0 8px 32px rgba(83,74,183,0.4)' : '0 0 0 transparent',
+        transform: hovered ? 'translateY(-2px)' : 'none',
+      }}
+    >
+      {children}
+    </Link>
+  )
 }
 
-// ─── Feature card data ────────────────────────────────────────────
-const features = [
-  {
-    icon: '🧠',
-    title: 'AI Script Generation',
-    desc: 'GPT-4 writes your hook, body, and CTA optimised for short-form engagement.',
-  },
-  {
-    icon: '🎙️',
-    title: 'Natural Voiceovers',
-    desc: '4 AI voices — Nova, Onyx, Echo, Shimmer — with realistic tone and pacing.',
-  },
-  {
-    icon: '✏️',
-    title: 'Click-to-Edit Captions',
-    desc: 'Click any word in the preview to edit it. Full caption style control.',
-  },
-  {
-    icon: '🎨',
-    title: 'Caption Styles',
-    desc: 'Classic, Fire, Neon, Minimal, Bold Drop, Typewriter with animations.',
-  },
-  {
-    icon: '🎬',
-    title: 'Background Video',
-    desc: 'Paste your own footage URL or pick a theme. Your content, your style.',
-  },
-  {
-    icon: '⚡',
-    title: 'Instant Preview',
-    desc: 'Live Remotion preview updates in real time as you make changes.',
-  },
-]
+function GhostButton({ href, children }: { href: string; children: React.ReactNode }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <Link
+      href={href}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        padding: '13px 26px',
+        background: 'transparent',
+        color: hovered ? TEXT_PRI : '#888',
+        border: `1px solid ${hovered ? '#444' : '#2a2a2a'}`,
+        borderRadius: '10px',
+        fontSize: '15px',
+        fontWeight: 400,
+        fontFamily: inter,
+        textDecoration: 'none',
+        transition: 'color 0.2s, border-color 0.2s',
+      }}
+    >
+      {children}
+    </Link>
+  )
+}
 
-const steps = [
-  {
-    num: '01',
-    title: 'Describe your video',
-    desc: 'Type a topic, idea, or paste your own script.',
-  },
-  {
-    num: '02',
-    title: 'AI does the work',
-    desc: 'Script, voice, captions, and background generated automatically.',
-  },
-  {
-    num: '03',
-    title: 'Customise & export',
-    desc: 'Tweak captions, swap backgrounds, adjust style then download.',
-  },
-]
+function FeatureCard({ icon, title, desc }: { icon: string; title: string; desc: string }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: CARD_BG,
+        border: `1px solid ${hovered ? PURPLE : CARD_BDR}`,
+        borderRadius: '16px',
+        padding: '28px',
+        transition: 'border-color 0.2s, transform 0.2s',
+        transform: hovered ? 'translateY(-2px)' : 'none',
+        cursor: 'default',
+      }}
+    >
+      <div style={{
+        width: '44px',
+        height: '44px',
+        background: 'rgba(83,74,183,0.15)',
+        borderRadius: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '22px',
+        marginBottom: '16px',
+      }}>
+        {icon}
+      </div>
+      <h3 style={{ fontFamily: syne, fontWeight: 800, fontSize: '17px', color: TEXT_PRI, marginBottom: '8px' }}>
+        {title}
+      </h3>
+      <p style={{ fontFamily: inter, fontWeight: 300, fontSize: '14px', color: TEXT_SEC, lineHeight: 1.65 }}>
+        {desc}
+      </p>
+    </div>
+  )
+}
 
 // ─── Page ─────────────────────────────────────────────────────────
 export default function HomePage() {
+  const [ctaHovered, setCtaHovered] = useState(false)
+
   return (
     <>
-      {/* Google Fonts */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap');
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-          background: ${C.bg};
-          color: ${C.textPrimary};
-          font-family: ${interFont};
-        }
-
-        .btn-primary:hover {
-          background: #6358d4 !important;
-          transform: translateY(-1px);
-        }
-
-        .btn-ghost:hover {
-          border-color: ${C.accentLight} !important;
-          color: ${C.accentLight} !important;
-        }
-
-        .feature-card:hover {
-          border-color: ${C.accent} !important;
-          transform: translateY(-2px);
-        }
-
-        .nav-btn-primary:hover {
-          background: #6358d4 !important;
-        }
-
-        .nav-btn-ghost:hover {
-          border-color: ${C.accentLight} !important;
-          color: ${C.accentLight} !important;
-        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { background: ${BG}; color: ${TEXT_PRI}; font-family: ${inter}; -webkit-font-smoothing: antialiased; }
+        ::selection { background: rgba(83,74,183,0.4); }
       `}</style>
 
-      <div style={{ background: C.bg, minHeight: '100vh' }}>
+      <div style={{ background: BG, minHeight: '100vh' }}>
 
-        {/* ── 1. STICKY NAV ─────────────────────────────────────── */}
+        {/* ─── 1. STICKY NAV ───────────────────────────────────── */}
         <nav style={{
           position: 'sticky',
           top: 0,
@@ -160,272 +168,226 @@ export default function HomePage() {
           background: 'rgba(8,8,8,0.9)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
-          borderBottom: `1px solid ${C.cardBorder}`,
-          padding: '0 24px',
-          height: '60px',
+          borderBottom: '1px solid #111',
+          padding: '20px 40px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}>
-          <span style={{ fontFamily: syneFont, fontWeight: 700, fontSize: '18px', color: C.accentLight }}>
+          <span style={{ fontFamily: syne, fontWeight: 800, fontSize: '18px', color: PURPLE_LT }}>
             Sovereign Creator
           </span>
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-            <Link
-              href="/studio"
-              className="nav-btn-ghost"
-              style={{
-                ...btnGhost,
-                padding: '8px 18px',
-                fontSize: '14px',
-              }}
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/studio"
-              className="nav-btn-primary"
-              style={{
-                ...btnPrimary,
-                padding: '8px 18px',
-                fontSize: '14px',
-              }}
-            >
-              Get Started Free
-            </Link>
+            <GhostButton href="/studio">Sign In</GhostButton>
+            <PurpleButton href="/studio">Get Started Free</PurpleButton>
           </div>
         </nav>
 
-        {/* ── 2. HERO ───────────────────────────────────────────── */}
-        <section style={{
-          position: 'relative',
-          textAlign: 'center',
-          padding: '100px 24px 80px',
-          overflow: 'hidden',
-        }}>
+        {/* ─── 2. HERO ─────────────────────────────────────────── */}
+        <section style={{ position: 'relative', textAlign: 'center', padding: '120px 20px 80px', overflow: 'hidden' }}>
           {/* Radial glow */}
           <div style={{
             position: 'absolute',
-            top: '10%',
+            top: '5%',
             left: '50%',
             transform: 'translateX(-50%)',
-            width: '700px',
-            height: '500px',
-            background: 'radial-gradient(ellipse at center, rgba(83,74,183,0.35) 0%, transparent 70%)',
+            width: '600px',
+            height: '600px',
+            background: 'radial-gradient(circle, rgba(83,74,183,0.35), transparent 70%)',
             pointerEvents: 'none',
+            zIndex: 0,
           }} />
 
-          <div style={{ position: 'relative', maxWidth: '720px', margin: '0 auto' }}>
+          <div style={{ position: 'relative', zIndex: 1, maxWidth: '800px', margin: '0 auto' }}>
             {/* Badge */}
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
+              gap: '8px',
               padding: '6px 16px',
-              border: `1px solid ${C.accent}`,
+              background: 'rgba(83,74,183,0.15)',
+              border: '1px solid rgba(83,74,183,0.4)',
               borderRadius: '999px',
-              fontSize: '13px',
-              color: C.accentLight,
-              marginBottom: '28px',
-              fontFamily: interFont,
+              color: '#9D97E8',
+              fontSize: '12px',
+              fontFamily: inter,
               fontWeight: 400,
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              marginBottom: '32px',
             }}>
               ✦ AI-Powered Short Form Video
             </div>
 
             {/* H1 */}
             <h1 style={{
-              fontFamily: syneFont,
+              fontFamily: syne,
               fontWeight: 800,
-              fontSize: 'clamp(44px, 7vw, 76px)',
-              lineHeight: 1.1,
-              marginBottom: '24px',
-              ...gradientText,
+              fontSize: 'clamp(48px, 8vw, 96px)',
+              letterSpacing: '-0.03em',
+              lineHeight: 1,
+              marginBottom: '28px',
+              color: TEXT_PRI,
             }}>
-              Create viral videos<br />in seconds
+              Create viral videos<br />
+              <span style={gradientText}>in seconds</span>
             </h1>
 
             {/* Subtext */}
             <p style={{
-              fontSize: '18px',
+              fontFamily: inter,
               fontWeight: 300,
-              color: C.textSecondary,
+              fontSize: '18px',
+              color: TEXT_SEC,
               lineHeight: 1.65,
-              maxWidth: '540px',
-              margin: '0 auto 40px',
-              fontFamily: interFont,
+              maxWidth: '520px',
+              margin: '0 auto 44px',
             }}>
               Turn any idea into a short-form video with AI-generated scripts,
               voiceovers, captions, and backgrounds. No editing skills required.
             </p>
 
-            {/* CTA buttons */}
+            {/* Buttons */}
             <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link href="/studio" className="btn-primary" style={{ ...btnPrimary, fontSize: '16px', padding: '14px 28px' }}>
-                Start Creating Free →
-              </Link>
-              <a href="#features" className="btn-ghost" style={{ ...btnGhost, fontSize: '16px', padding: '14px 28px' }}>
-                See how it works
-              </a>
+              <PurpleButton href="/studio">Start Creating Free →</PurpleButton>
+              <GhostButton href="#features">See how it works</GhostButton>
             </div>
 
-            <p style={{ marginTop: '16px', fontSize: '13px', color: C.textMuted, fontFamily: interFont }}>
+            <p style={{ marginTop: '20px', fontSize: '12px', color: TEXT_MUT, fontFamily: inter }}>
               No credit card required
             </p>
           </div>
         </section>
 
-        {/* ── 3. FLOW MOCKUP ────────────────────────────────────── */}
-        <section style={{ padding: '20px 24px 80px' }}>
+        <hr style={sectionDivider} />
+
+        {/* ─── 3. FLOW MOCKUP ──────────────────────────────────── */}
+        <section style={{ padding: '64px 20px' }}>
           <div style={{
             maxWidth: '800px',
             margin: '0 auto',
-            background: C.cardBg,
-            border: `1px solid ${C.cardBorder}`,
-            borderRadius: '16px',
-            padding: '36px 40px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '0',
-            flexWrap: 'wrap',
+            background: CARD_BG,
+            border: `1px solid ${CARD_BDR}`,
+            borderRadius: '20px',
+            padding: '20px',
           }}>
-            {[
-              { emoji: '✍️', label: 'Write prompt' },
-              { emoji: '🤖', label: 'AI generates' },
-              { emoji: '🎬', label: 'Video ready' },
-            ].map((step, i) => (
-              <div key={step.label} style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{ textAlign: 'center', padding: '0 28px' }}>
-                  <div style={{ fontSize: '32px', marginBottom: '10px' }}>{step.emoji}</div>
-                  <div style={{ fontSize: '14px', color: C.textSecondary, fontFamily: interFont }}>{step.label}</div>
-                </div>
-                {i < 2 && (
-                  <div style={{ color: C.textMuted, fontSize: '22px', lineHeight: 1 }}>→</div>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── 4. FEATURES GRID ──────────────────────────────────── */}
-        <section id="features" style={{ padding: '80px 24px' }}>
-          <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-            <h2 style={{
-              fontFamily: syneFont,
-              fontWeight: 700,
-              fontSize: 'clamp(28px, 4vw, 42px)',
-              textAlign: 'center',
-              marginBottom: '56px',
-              color: C.textPrimary,
-            }}>
-              Everything you need
-            </h2>
-
+            {/* Browser bar */}
+            <div style={{ display: 'flex', gap: '6px', marginBottom: '16px', paddingLeft: '4px' }}>
+              {['#ff5f57','#febc2e','#28c840'].map((c) => (
+                <div key={c} style={{ width: '10px', height: '10px', borderRadius: '50%', background: c }} />
+              ))}
+            </div>
+            {/* Steps */}
             <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '20px',
+              background: '#0d0d0d',
+              borderRadius: '12px',
+              padding: '36px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+              gap: '8px',
             }}>
-              {features.map((f) => (
-                <div
-                  key={f.title}
-                  className="feature-card"
-                  style={{
-                    background: C.cardBg,
-                    border: `1px solid ${C.cardBorder}`,
-                    borderRadius: '12px',
-                    padding: '28px',
-                    transition: 'border-color 0.2s, transform 0.2s',
-                    cursor: 'default',
-                  }}
-                >
-                  <div style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '44px',
-                    height: '44px',
-                    background: 'rgba(83,74,183,0.15)',
-                    borderRadius: '10px',
-                    fontSize: '22px',
-                    marginBottom: '16px',
-                  }}>
-                    {f.icon}
+              {[
+                { emoji: '✍️', label: 'Write prompt' },
+                { emoji: '🤖', label: 'AI generates' },
+                { emoji: '🎬', label: 'Video ready' },
+              ].map((step, i) => (
+                <div key={step.label} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ textAlign: 'center', padding: '0 20px' }}>
+                    <div style={{ fontSize: '40px', marginBottom: '10px' }}>{step.emoji}</div>
+                    <div style={{ fontSize: '13px', fontFamily: inter, color: TEXT_SEC }}>{step.label}</div>
                   </div>
-                  <h3 style={{
-                    fontFamily: syneFont,
-                    fontWeight: 700,
-                    fontSize: '17px',
-                    color: C.textPrimary,
-                    marginBottom: '8px',
-                  }}>
-                    {f.title}
-                  </h3>
-                  <p style={{
-                    fontSize: '14px',
-                    fontWeight: 300,
-                    color: C.textSecondary,
-                    lineHeight: 1.6,
-                    fontFamily: interFont,
-                  }}>
-                    {f.desc}
-                  </p>
+                  {i < 2 && (
+                    <div style={{ color: '#333', fontSize: '20px', lineHeight: 1, padding: '0 4px' }}>→</div>
+                  )}
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ── 5. HOW IT WORKS ───────────────────────────────────── */}
-        <section style={{ padding: '80px 24px', background: '#0c0c0c' }}>
-          <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <hr style={sectionDivider} />
+
+        {/* ─── 4. FEATURES ─────────────────────────────────────── */}
+        <section id="features" style={{ padding: '96px 40px' }}>
+          <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+              <h2 style={{
+                fontFamily: syne,
+                fontWeight: 800,
+                fontSize: 'clamp(32px, 5vw, 52px)',
+                letterSpacing: '-0.02em',
+                color: TEXT_PRI,
+                marginBottom: '16px',
+              }}>
+                Everything you need
+              </h2>
+              <p style={{ fontFamily: inter, fontSize: '17px', fontWeight: 300, color: TEXT_SEC }}>
+                From idea to published video in under 2 minutes
+              </p>
+            </div>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '16px',
+            }}>
+              {FEATURES.map((f) => (
+                <FeatureCard key={f.title} {...f} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <hr style={sectionDivider} />
+
+        {/* ─── 5. HOW IT WORKS ─────────────────────────────────── */}
+        <section style={{ padding: '96px 40px', background: '#0b0b0b' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto' }}>
             <h2 style={{
-              fontFamily: syneFont,
-              fontWeight: 700,
-              fontSize: 'clamp(28px, 4vw, 42px)',
+              fontFamily: syne,
+              fontWeight: 800,
+              fontSize: 'clamp(32px, 5vw, 52px)',
+              letterSpacing: '-0.02em',
+              color: TEXT_PRI,
               textAlign: 'center',
-              marginBottom: '64px',
-              color: C.textPrimary,
+              marginBottom: '72px',
             }}>
               How it works
             </h2>
-
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '32px',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: '48px',
             }}>
-              {steps.map((step) => (
-                <div key={step.num} style={{ position: 'relative', padding: '8px 0' }}>
-                  {/* Large faded number */}
+              {STEPS.map((step) => (
+                <div key={step.n}>
                   <div style={{
-                    fontFamily: syneFont,
+                    fontFamily: syne,
                     fontWeight: 800,
-                    fontSize: '96px',
+                    fontSize: '64px',
                     lineHeight: 1,
-                    color: 'rgba(83,74,183,0.15)',
-                    marginBottom: '-24px',
+                    color: 'rgba(83,74,183,0.2)',
+                    marginBottom: '16px',
                     userSelect: 'none',
                   }}>
-                    {step.num}
+                    {step.n}
                   </div>
                   <h3 style={{
-                    fontFamily: syneFont,
-                    fontWeight: 700,
+                    fontFamily: syne,
+                    fontWeight: 800,
                     fontSize: '20px',
-                    color: C.textPrimary,
+                    color: TEXT_PRI,
                     marginBottom: '10px',
-                    position: 'relative',
                   }}>
                     {step.title}
                   </h3>
                   <p style={{
-                    fontSize: '15px',
+                    fontFamily: inter,
                     fontWeight: 300,
-                    color: C.textSecondary,
-                    lineHeight: 1.6,
-                    fontFamily: interFont,
+                    fontSize: '15px',
+                    color: TEXT_SEC,
+                    lineHeight: 1.65,
                   }}>
                     {step.desc}
                   </p>
@@ -435,61 +397,78 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── 6. CTA BANNER ─────────────────────────────────────── */}
-        <section style={{ padding: '80px 24px' }}>
+        <hr style={sectionDivider} />
+
+        {/* ─── 6. CTA BANNER ───────────────────────────────────── */}
+        <section style={{ padding: '80px 40px' }}>
           <div style={{
-            maxWidth: '720px',
+            maxWidth: '900px',
             margin: '0 auto',
             background: 'linear-gradient(135deg, #1a1a2e, #16162a)',
             border: '1px solid #2a2a4a',
-            borderRadius: '20px',
-            padding: '64px 40px',
+            borderRadius: '24px',
+            padding: '80px 40px',
             textAlign: 'center',
           }}>
             <h2 style={{
-              fontFamily: syneFont,
+              fontFamily: syne,
               fontWeight: 800,
-              fontSize: 'clamp(28px, 4vw, 44px)',
-              color: C.textPrimary,
+              fontSize: 'clamp(32px, 5vw, 52px)',
+              letterSpacing: '-0.02em',
+              color: TEXT_PRI,
               marginBottom: '16px',
             }}>
               Ready to go viral?
             </h2>
             <p style={{
-              fontSize: '17px',
+              fontFamily: inter,
               fontWeight: 300,
-              color: C.textSecondary,
-              marginBottom: '36px',
-              fontFamily: interFont,
+              fontSize: '17px',
+              color: TEXT_SEC,
+              marginBottom: '40px',
             }}>
               Start creating for free. No credit card needed.
             </p>
             <Link
               href="/studio"
-              className="btn-primary"
-              style={{ ...btnPrimary, fontSize: '17px', padding: '16px 36px' }}
+              onMouseEnter={() => setCtaHovered(true)}
+              onMouseLeave={() => setCtaHovered(false)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '16px 40px',
+                background: PURPLE,
+                color: TEXT_PRI,
+                borderRadius: '10px',
+                fontSize: '17px',
+                fontWeight: 500,
+                fontFamily: inter,
+                textDecoration: 'none',
+                transition: 'box-shadow 0.2s, transform 0.2s',
+                boxShadow: ctaHovered ? '0 8px 32px rgba(83,74,183,0.4)' : 'none',
+                transform: ctaHovered ? 'translateY(-2px)' : 'none',
+              }}
             >
               Open Studio →
             </Link>
           </div>
         </section>
 
-        {/* ── 7. FOOTER ─────────────────────────────────────────── */}
+        {/* ─── 7. FOOTER ───────────────────────────────────────── */}
         <footer style={{
-          borderTop: `1px solid #111`,
-          padding: '28px 24px',
+          borderTop: '1px solid #111',
+          padding: '32px 40px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '12px',
-          maxWidth: '1100px',
-          margin: '0 auto',
         }}>
-          <span style={{ fontFamily: syneFont, fontWeight: 700, fontSize: '15px', color: C.accentLight }}>
+          <span style={{ fontFamily: syne, fontWeight: 800, fontSize: '15px', color: PURPLE_LT }}>
             Sovereign Creator
           </span>
-          <span style={{ fontSize: '13px', color: C.textMuted, fontFamily: interFont }}>
+          <span style={{ fontFamily: inter, fontSize: '13px', color: TEXT_MUT }}>
             Built with AI. Made for creators.
           </span>
         </footer>
