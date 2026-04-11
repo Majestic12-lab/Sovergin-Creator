@@ -98,7 +98,7 @@ export function LeftPanel() {
             marginTop: '8px', width: '100%', background: '#0f0f0f',
             border: '1px solid #2a2a2a', borderRadius: '8px', color: '#fff',
             fontSize: '14px', padding: '10px 12px', resize: 'none',
-            outline: 'none', lineHeight: 1.5, boxSizing: 'border-box',
+            outline: 'none', lineHeight: 1.3, boxSizing: 'border-box',
           }}
         />
         <p style={{ fontSize: '11px', color: '#555', textAlign: 'right', marginTop: '4px' }}>

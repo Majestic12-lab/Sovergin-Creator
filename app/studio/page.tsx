@@ -46,7 +46,9 @@ export default function StudioPage() {
         return
       }
 
-      // Arrow scrubbing
+      // Arrow scrubbing — only when not in a text input
+      const tag = (e.target as HTMLElement).tagName
+      if (tag === 'TEXTAREA' || tag === 'INPUT') return
       if (e.key === 'ArrowLeft') {
         e.preventDefault()
         setCurrentFrame(Math.max(0, currentFrame - 30))
