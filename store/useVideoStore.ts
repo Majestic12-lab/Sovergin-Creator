@@ -9,18 +9,16 @@ import {
 } from '@/types/video'
 
 interface VideoStore {
-  // State
   project: VideoProject
   jobId: string | null
   jobStatus: JobStatus
   currentFrame: number
   editingWordIndex: number | null
   editHistory: WordWithTimestamp[][]
-
-  // Actions
   setScript(script: string): void
   setVoiceId(voiceId: string): void
   setBackgroundTheme(theme: string): void
+  setCustomBackgroundUrl(url: string): void
   setCaptionStyle(partial: Partial<CaptionStyle>): void
   setCurrentFrame(frame: number): void
   setEditingWord(index: number | null): void
@@ -40,27 +38,24 @@ interface VideoStore {
 export const useVideoStore = create<VideoStore>()(
   persist(
     (set, get) => ({
-      // Initial state
       project: DEFAULT_PROJECT,
       jobId: null,
       jobStatus: 'idle',
       currentFrame: 0,
       editingWordIndex: null,
       editHistory: [],
-
-      // Actions
       setScript(script) {
         set((state) => ({ project: { ...state.project, script } }))
       },
-
       setVoiceId(voiceId) {
         set((state) => ({ project: { ...state.project, voiceId } }))
       },
-
       setBackgroundTheme(theme) {
         set((state) => ({ project: { ...state.project, backgroundTheme: theme } }))
       },
-
+      setCustomBackgroundUrl(url) {
+        set((state) => ({ project: { ...state.project, customBackgroundUrl: url } }))
+      },
       setCaptionStyle(partial) {
         set((state) => ({
           project: {
@@ -69,15 +64,12 @@ export const useVideoStore = create<VideoStore>()(
           },
         }))
       },
-
       setCurrentFrame(frame) {
         set({ currentFrame: frame })
       },
-
       setEditingWord(index) {
         set({ editingWordIndex: index })
       },
-
       updateWord(index, newText) {
         const { project, editHistory } = get()
         const snapshot = [...project.words]
@@ -92,7 +84,6 @@ export const useVideoStore = create<VideoStore>()(
           project: { ...project, words: updatedWords },
         })
       },
-
       undoLastEdit() {
         const { editHistory, project } = get()
         if (editHistory.length === 0) return
@@ -102,7 +93,6 @@ export const useVideoStore = create<VideoStore>()(
           project: { ...project, words: previous },
         })
       },
-
       setGenerationResult({ jobId, words, audioUrl, backgroundUrl, durationSeconds }) {
         set((state) => ({
           jobId,
@@ -116,11 +106,9 @@ export const useVideoStore = create<VideoStore>()(
           },
         }))
       },
-
       setJobStatus(status) {
         set({ jobStatus: status })
       },
-
       resetProject() {
         set({
           project: DEFAULT_PROJECT,

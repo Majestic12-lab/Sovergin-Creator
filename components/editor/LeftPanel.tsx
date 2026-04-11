@@ -168,7 +168,7 @@ export function LeftPanel() {
         </label>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
           {THEMES.map((theme) => {
-            const themeId = theme.toLowerCase().replace(/\s+/g, '-')
+            const themeId = theme.toLowerCase().replace(/ /g, '-')
             const selected = backgroundTheme === themeId
             return (
               <button
