@@ -21,12 +21,19 @@ export async function GET(
       )
     }
 
-    const progress = await getRenderProgress({
-      renderId,
-      bucketName,
-      functionName,
-      region: region as Parameters<typeof getRenderProgress>[0]['region'],
-    })
+    let progress: Awaited<ReturnType<typeof getRenderProgress>>
+    try {
+      progress = await getRenderProgress({
+        renderId,
+        bucketName,
+        functionName,
+        region: region as Parameters<typeof getRenderProgress>[0]['region'],
+      })
+    } catch (err) {
+      console.error(JSON.stringify(err))
+      const message = err instanceof Error ? err.message : 'getRenderProgress failed'
+      return NextResponse.json({ error: message }, { status: 500 })
+    }
 
     if (progress.fatalErrorEncountered) {
       return NextResponse.json(
