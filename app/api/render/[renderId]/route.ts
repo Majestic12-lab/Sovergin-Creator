@@ -51,6 +51,7 @@ export async function GET(
       outputUrl,
     })
   } catch (err) {
+    console.error('RENDER PROGRESS ERROR:', JSON.stringify(err, Object.getOwnPropertyNames(err)))
     const message = err instanceof Error ? err.message : 'Failed to get render progress'
     return NextResponse.json({ error: message }, { status: 500 })
   }
