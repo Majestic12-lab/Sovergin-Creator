@@ -44,6 +44,7 @@ export default function StudioPage() {
       const { renderId, bucketName } = await res.json() as { renderId: string; bucketName: string }
 
       await new Promise<void>((resolve, reject) => {
+        setTimeout(() => {
         const poll = setInterval(async () => {
           try {
             const pr = await fetch(`/api/render/${renderId}?bucketName=${encodeURIComponent(bucketName)}`)
@@ -73,7 +74,8 @@ export default function StudioPage() {
             clearInterval(poll)
             reject(e)
           }
-        }, 3000)
+        }, 5000)
+        }, 5000)
       })
 
       setRenderState({ phase: 'idle' })
