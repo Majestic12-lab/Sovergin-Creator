@@ -32,10 +32,11 @@ export default function StudioPage() {
     if (!jobId) return
     setRenderState({ phase: 'rendering', progress: 0 })
     try {
+      const fullAudioUrl = `${window.location.origin}${audioUrl}`
       const res = await fetch('/api/render', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jobId, words, audioUrl, backgroundUrl, captionStyle, durationSeconds }),
+        body: JSON.stringify({ jobId, words, audioUrl: fullAudioUrl, backgroundUrl, captionStyle, durationSeconds }),
       })
       if (!res.ok) {
         const err = await res.json()

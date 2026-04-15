@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
       composition: COMPOSITION_ID,
       inputProps: { words, audioUrl, backgroundUrl, captionStyle },
       codec: 'h264',
+      concurrencyPerLambda: 1,
       imageFormat: 'jpeg',
       forceDurationInFrames: durationInFrames,
       outName: `${Date.now()}.mp4`,
