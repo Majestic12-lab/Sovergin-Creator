@@ -18,6 +18,7 @@ export default function StudioPage() {
   const jobStatus = useVideoStore((s) => s.jobStatus)
   const jobId = useVideoStore((s) => s.jobId)
   const audioUrl = useVideoStore((s) => s.project.audioUrl)
+  const r2AudioUrl = useVideoStore((s) => s.project.r2AudioUrl)
   const backgroundUrl = useVideoStore((s) => s.project.backgroundUrl)
   const captionStyle = useVideoStore((s) => s.project.captionStyle)
   const durationSeconds = useVideoStore((s) => s.project.durationSeconds)
@@ -32,11 +33,10 @@ export default function StudioPage() {
     if (!jobId) return
     setRenderState({ phase: 'rendering', progress: 0 })
     try {
-      const fullAudioUrl = `${window.location.origin}${audioUrl}`
       const res = await fetch('/api/render', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jobId, words, audioUrl: fullAudioUrl, backgroundUrl, captionStyle, durationSeconds }),
+        body: JSON.stringify({ jobId, words, audioUrl: r2AudioUrl, backgroundUrl, captionStyle, durationSeconds }),
       })
       if (!res.ok) {
         const err = await res.json()
@@ -83,7 +83,7 @@ export default function StudioPage() {
     } catch (e) {
       setRenderState({ phase: 'error', message: e instanceof Error ? e.message : 'Unknown error' })
     }
-  }, [jobId, words, audioUrl, backgroundUrl, captionStyle, durationSeconds])
+  }, [jobId, words, r2AudioUrl, backgroundUrl, captionStyle, durationSeconds])
 
   const durationFrames = calcDurationFrames(words)
 

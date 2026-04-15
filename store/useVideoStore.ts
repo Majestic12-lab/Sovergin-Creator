@@ -28,6 +28,7 @@ interface VideoStore {
     jobId: string
     words: WordWithTimestamp[]
     audioUrl: string
+    r2AudioUrl: string
     backgroundUrl: string
     durationSeconds: number
   }): void
@@ -93,7 +94,7 @@ export const useVideoStore = create<VideoStore>()(
           project: { ...project, words: previous },
         })
       },
-      setGenerationResult({ jobId, words, audioUrl, backgroundUrl, durationSeconds }) {
+      setGenerationResult({ jobId, words, audioUrl, r2AudioUrl, backgroundUrl, durationSeconds }) {
         set((state) => ({
           jobId,
           jobStatus: 'complete',
@@ -101,6 +102,7 @@ export const useVideoStore = create<VideoStore>()(
             ...state.project,
             words,
             audioUrl,
+            r2AudioUrl,
             backgroundUrl,
             durationSeconds,
           },

@@ -4,7 +4,7 @@ import { generateScript } from '@/lib/openai'
 import { generateVoice } from '@/lib/elevenlabs'
 import { transcribeAudio } from '@/lib/whisper'
 import { fetchBackgroundClip } from '@/lib/pexels'
-import { uploadAudioToR2 } from '@/lib/r2'
+import { uploadAudioToR2, getPublicAudioUrl } from '@/lib/r2'
 import { prisma } from '@/lib/db'
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { WordWithTimestamp, VideoScript } from '@/types/video'
@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
     const audioBuffer: Buffer = await generateVoice(script.fullScript, voiceId)
     console.log('[2/4] Voice generated, bytes:', audioBuffer.length)
     await uploadAudioToR2(jobId, audioBuffer)
+    const r2AudioUrl = getPublicAudioUrl(jobId)
     console.log('[2.5/4] Audio uploaded to R2')
     const words: WordWithTimestamp[] = await transcribeAudio(audioBuffer)
     console.log('[3/4] Transcribed words:', words.length)
@@ -61,6 +62,7 @@ export async function POST(request: NextRequest) {
       jobId,
       words,
       audioUrl: `/api/audio/${jobId}`,
+      r2AudioUrl,
       backgroundUrl,
       durationSeconds,
       script,

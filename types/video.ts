@@ -33,6 +33,7 @@ export interface VideoProject {
   customBackgroundUrl: string
   words: WordWithTimestamp[]
   audioUrl: string | null
+  r2AudioUrl: string | null
   backgroundUrl: string | null
   durationSeconds: number
   captionStyle: CaptionStyle
@@ -66,6 +67,7 @@ export const DEFAULT_PROJECT: VideoProject = {
   customBackgroundUrl: '',
   words: [],
   audioUrl: null,
+  r2AudioUrl: null,
   backgroundUrl: null,
   durationSeconds: 0,
   captionStyle: DEFAULT_CAPTION_STYLE,

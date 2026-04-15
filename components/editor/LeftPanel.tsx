@@ -69,6 +69,7 @@ export function LeftPanel() {
         jobId: data.jobId,
         words: data.words,
         audioUrl: data.audioUrl,
+        r2AudioUrl: data.r2AudioUrl,
         backgroundUrl: data.backgroundUrl,
         durationSeconds: data.durationSeconds,
       })
