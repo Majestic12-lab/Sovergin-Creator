@@ -32,6 +32,7 @@ export default function StudioPage() {
   const handleDownload = useCallback(async () => {
     if (!jobId) return
     setRenderState({ phase: 'rendering', progress: 0 })
+    console.log('RENDER REQUEST:', { jobId, r2AudioUrl, backgroundUrl, durationSeconds })
     try {
       const res = await fetch('/api/render', {
         method: 'POST',
@@ -39,8 +40,9 @@ export default function StudioPage() {
         body: JSON.stringify({ jobId, words, audioUrl: r2AudioUrl, backgroundUrl, captionStyle, durationSeconds }),
       })
       if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error ?? 'Render request failed')
+        const errorText = await res.text()
+        console.error('RENDER FAILED:', errorText)
+        throw new Error(errorText || 'Render request failed')
       }
       const { renderId, bucketName } = await res.json() as { renderId: string; bucketName: string }
 
