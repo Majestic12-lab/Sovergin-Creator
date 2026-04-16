@@ -54,7 +54,8 @@ export default function StudioPage() {
             const pr = await fetch(`/api/render/${renderId}?bucketName=${encodeURIComponent(bucketName)}`)
             if (!pr.ok) {
               clearInterval(poll)
-              reject(new Error('Progress check failed'))
+              const errText = await pr.text()
+              reject(new Error(errText || 'Progress check failed'))
               return
             }
             const data = await pr.json() as {
