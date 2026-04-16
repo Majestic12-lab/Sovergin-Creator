@@ -11,6 +11,8 @@ export async function GET(
     const region = process.env.AWS_REGION
     const functionName = process.env.REMOTION_FUNCTION_NAME
 
+    console.log('PROGRESS CHECK:', { renderId, bucketName, region, functionName: functionName?.slice(0, 20) })
+
     if (!bucketName) {
       return NextResponse.json({ error: 'bucketName query param is required' }, { status: 400 })
     }
@@ -35,9 +37,13 @@ export async function GET(
       return NextResponse.json({ error: message }, { status: 500 })
     }
 
+    console.log('PROGRESS RESULT:', { done: progress.done, overallProgress: progress.overallProgress, fatalError: progress.fatalErrorEncountered })
+
     if (progress.fatalErrorEncountered) {
+      const errMsg = progress.errors?.[0]?.message ?? 'Render failed'
+      console.error('FATAL RENDER ERROR:', errMsg)
       return NextResponse.json(
-        { status: 'error', progress: 0, outputUrl: null, error: progress.errors[0]?.message ?? 'Render failed' },
+        { status: 'error', progress: 0, outputUrl: null, error: errMsg },
         { status: 500 }
       )
     }
