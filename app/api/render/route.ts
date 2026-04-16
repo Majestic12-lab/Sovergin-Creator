@@ -28,6 +28,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (!audioUrl || audioUrl.trim() === '') {
+      return NextResponse.json(
+        { error: 'audioUrl is required and cannot be empty' },
+        { status: 400 }
+      )
+    }
+
+    console.log('RENDER INPUT:', { audioUrl, backgroundUrl, functionName, serveUrl })
+
     const durationInFrames = secondsToFrames(durationSeconds) + FPS
 
     const { renderId, bucketName } = await renderMediaOnLambda({
