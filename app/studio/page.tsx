@@ -55,7 +55,7 @@ export default function StudioPage() {
             if (!pr.ok) {
               clearInterval(poll)
               const errText = await pr.text()
-              reject(new Error(errText || 'Progress check failed'))
+              reject(new Error('STATUS:' + pr.status + ' BODY:' + (errText || 'empty')))
               return
             }
             const data = await pr.json() as {
