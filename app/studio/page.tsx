@@ -42,7 +42,8 @@ export default function StudioPage() {
       if (!res.ok) {
         const errorText = await res.text()
         console.error('RENDER FAILED:', errorText)
-        throw new Error(errorText || 'Render request failed')
+        setRenderState({ phase: 'error', message: errorText || 'Render request failed' })
+        return
       }
       const { renderId, bucketName } = await res.json() as { renderId: string; bucketName: string }
 
@@ -73,9 +74,12 @@ export default function StudioPage() {
               window.open(data.outputUrl, '_blank')
               resolve()
             }
-          } catch (e) {
+          } catch (pollErr) {
+            const msg = pollErr instanceof Error ? pollErr.message : String(pollErr)
+            console.error('POLL ERROR:', msg)
+            setRenderState({ phase: 'error', message: msg })
             clearInterval(poll)
-            reject(e)
+            reject(pollErr)
           }
         }, 5000)
         }, 5000)
