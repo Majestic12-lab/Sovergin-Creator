@@ -172,6 +172,7 @@ export default function StudioPage() {
           <button
             onClick={renderState.phase === 'idle' ? handleDownload : undefined}
             disabled={renderState.phase === 'rendering'}
+            title={renderState.phase === 'error' ? renderState.message : ''}
             style={{
               marginLeft: 'auto',
               background: renderState.phase === 'error' ? '#7f1d1d' : '#534AB7',
@@ -193,7 +194,7 @@ export default function StudioPage() {
               (renderState.progress > 0
                 ? `Rendering ${Math.round(renderState.progress * 100)}%...`
                 : 'Rendering...')}
-            {renderState.phase === 'error' && `Error: ${renderState.message}`}
+            {renderState.phase === 'error' && 'Error - hover for details'}
           </button>
         )}
       </header>
