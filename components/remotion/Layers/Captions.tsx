@@ -2,6 +2,16 @@ import { useCurrentFrame, useVideoConfig, AbsoluteFill, spring, interpolate } fr
 import { WordWithTimestamp, CaptionStyle } from '../../../types/video'
 import { getPositionY, COMPOSITION_HEIGHT } from '../utils/scaling'
 
+const GOOGLE_FONTS_URL =
+  'https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900' +
+  '&family=Montserrat:wght@400;700;900' +
+  '&family=Oswald:wght@400;700' +
+  '&family=Bebas+Neue' +
+  '&family=Permanent+Marker' +
+  '&family=Bangers' +
+  '&family=Roboto+Condensed:wght@400;700' +
+  '&display=swap'
+
 interface CaptionsProps {
   words: WordWithTimestamp[]
   style: CaptionStyle
@@ -14,7 +24,10 @@ export function Captions({ words, style, onWordClick }: CaptionsProps) {
   const currentSecond = frame / fps
 
   const activeWord = words.find((w) => currentSecond >= w.start && currentSecond <= w.end)
-  if (!activeWord) return null
+
+  const fontStyle = <style>{`@import url('${GOOGLE_FONTS_URL}');`}</style>
+
+  if (!activeWord) return fontStyle
 
   const activeIdx = activeWord.index
   const half = Math.floor(style.wordsPerGroup / 2)
@@ -53,6 +66,8 @@ export function Captions({ words, style, onWordClick }: CaptionsProps) {
   }
 
   return (
+    <>
+    {fontStyle}
     <AbsoluteFill
       style={{
         justifyContent: 'center',
@@ -96,5 +111,6 @@ export function Captions({ words, style, onWordClick }: CaptionsProps) {
         })}
       </div>
     </AbsoluteFill>
+    </>
   )
 }

@@ -71,6 +71,16 @@ const POSITION_OPTIONS: CaptionStyle['position'][] = ['top', 'middle', 'bottom']
 const ANIMATION_OPTIONS: CaptionStyle['animation'][] = ['none', 'pop', 'bounce', 'shake', 'zoom']
 const WORDS_PER_GROUP: CaptionStyle['wordsPerGroup'][] = [1, 2, 3]
 
+const FONTS: { family: string; label: string }[] = [
+  { family: 'Inter',            label: 'Inter'            },
+  { family: 'Montserrat',       label: 'Montserrat'       },
+  { family: 'Oswald',           label: 'Oswald'           },
+  { family: 'Bebas Neue',       label: 'Bebas Neue'       },
+  { family: 'Permanent Marker', label: 'Permanent Marker' },
+  { family: 'Bangers',          label: 'Bangers'          },
+  { family: 'Roboto Condensed', label: 'Roboto Condensed' },
+]
+
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <label style={{ fontSize: '11px', fontWeight: 600, color: '#666', letterSpacing: '0.07em', textTransform: 'uppercase' }}>
@@ -173,6 +183,38 @@ export function RightPanel() {
                 <span style={{ fontSize: '11px', color: selected ? '#7F77DD' : '#888' }}>
                   {preset.label}
                 </span>
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
+      <Divider />
+
+      {/* SECTION F — Font */}
+      <section style={{ padding: '20px 16px' }}>
+        <SectionLabel>Font</SectionLabel>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '8px' }}>
+          {FONTS.map((f) => {
+            const selected = captionStyle.fontFamily === f.family
+            return (
+              <button
+                key={f.family}
+                onClick={() => setCaptionStyle({ fontFamily: f.family })}
+                style={{
+                  background: selected ? '#1e1a3a' : '#0f0f0f',
+                  border: `1px solid ${selected ? '#534AB7' : '#2a2a2a'}`,
+                  borderRadius: '8px',
+                  padding: '8px 12px',
+                  color: selected ? '#7F77DD' : '#aaa',
+                  fontSize: '13px',
+                  fontFamily: f.family,
+                  fontWeight: selected ? 700 : 400,
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+              >
+                {f.label}
               </button>
             )
           })}
