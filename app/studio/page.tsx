@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useCallback, useState } from 'react'
+import Link from 'next/link'
 import { useVideoStore } from '@/store/useVideoStore'
 import { LeftPanel } from '@/components/editor/LeftPanel'
 import { CenterPreview } from '@/components/editor/CenterPreview'
@@ -167,6 +168,17 @@ export default function StudioPage() {
       >
         <span style={{ color: '#7F77DD', fontWeight: 700 }}>Sovereign Creator</span>
         <span style={{ color: '#555', fontSize: '12px' }}>Studio</span>
+        <Link
+          href="/projects"
+          style={{
+            color: '#888',
+            fontSize: '12px',
+            textDecoration: 'none',
+            marginLeft: '12px',
+          }}
+        >
+          Projects
+        </Link>
 
         {jobStatus === 'complete' && (
           <button
