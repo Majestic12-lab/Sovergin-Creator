@@ -7,7 +7,6 @@ import { useVideoStore } from '@/store/useVideoStore'
 import { LeftPanel } from '@/components/editor/LeftPanel'
 import { CenterPreview } from '@/components/editor/CenterPreview'
 import { RightPanel } from '@/components/editor/RightPanel'
-import { Timeline } from '@/components/editor/Timeline'
 import { calcDurationFrames } from '@/components/remotion/utils/scaling'
 
 export default function StudioPage() {
@@ -238,9 +237,6 @@ export default function StudioPage() {
 
         <RightPanel />
       </div>
-
-      {/* Bottom timeline */}
-      <Timeline />
     </main>
   )
 }
