@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server'
-import ytdl from 'ytdl-core'
+
+interface CobaltResponse {
+  status: string
+  url?: string
+  text?: string
+}
 
 export async function POST(request: Request) {
   let url: string
@@ -14,25 +19,35 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'URL is required' }, { status: 400 })
   }
 
-  if (!ytdl.validateURL(url)) {
-    return NextResponse.json({ error: 'Not a valid YouTube URL' }, { status: 400 })
-  }
-
   try {
-    const info = await ytdl.getInfo(url)
+    const res = await fetch('https://api.cobalt.tools/api/json', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url, vCodec: 'h264', vQuality: '720', isAudioMuted: false }),
+    })
 
-    // Prefer an mp4 format with both video and audio, highest quality ≤ 720p
-    const format =
-      ytdl.chooseFormat(info.formats, { quality: 'highestvideo', filter: (f) => f.container === 'mp4' && !!f.url }) ??
-      ytdl.chooseFormat(info.formats, { quality: 'highest', filter: 'videoandaudio' })
+    const data = await res.json() as CobaltResponse
 
-    if (!format?.url) {
-      return NextResponse.json({ error: 'No streamable mp4 format found for this video' }, { status: 422 })
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: data.text ?? `Cobalt API error (${res.status})` },
+        { status: res.status }
+      )
     }
 
-    return NextResponse.json({ videoUrl: format.url })
+    if ((data.status === 'stream' || data.status === 'redirect') && data.url) {
+      return NextResponse.json({ videoUrl: data.url })
+    }
+
+    return NextResponse.json(
+      { error: data.text ?? `Unexpected response status: ${data.status}` },
+      { status: 422 }
+    )
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Failed to fetch video info'
+    const message = err instanceof Error ? err.message : 'Failed to contact Cobalt API'
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }
