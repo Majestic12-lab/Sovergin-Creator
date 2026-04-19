@@ -30,7 +30,7 @@ export default function PricingPage() {
   const annualPrice = Math.round(monthlyPrice * 0.8)
 
   return (
-    <main style={{ minHeight: '100vh', background: '#080808', color: '#fff', fontFamily: 'Inter, sans-serif' }}>
+    <main style={{ height: '100%', overflowY: 'auto', background: '#080808', color: '#fff', fontFamily: 'Inter, sans-serif', paddingBottom: '60px' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
