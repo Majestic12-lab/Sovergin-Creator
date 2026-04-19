@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#080808"/>
+
+  <!-- Purple glow -->
+  <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#534AB7" stop-opacity="0.35"/>
+    <stop offset="100%" stop-color="#080808" stop-opacity="0"/>
+  </radialGradient>
+  <ellipse cx="600" cy="315" rx="520" ry="300" fill="url(#glow)"/>
+
+  <!-- Subtle grid lines -->
+  <line x1="0" y1="210" x2="1200" y2="210" stroke="#1a1a1a" stroke-width="1"/>
+  <line x1="0" y1="420" x2="1200" y2="420" stroke="#1a1a1a" stroke-width="1"/>
+  <line x1="400" y1="0" x2="400" y2="630" stroke="#1a1a1a" stroke-width="1"/>
+  <line x1="800" y1="0" x2="800" y2="630" stroke="#1a1a1a" stroke-width="1"/>
+
+  <!-- Purple accent bar -->
+  <rect x="540" y="200" width="120" height="4" rx="2" fill="#534AB7"/>
+
+  <!-- Main title -->
+  <text
+    x="600"
+    y="310"
+    font-family="'Arial Black', 'Helvetica Neue', sans-serif"
+    font-weight="900"
+    font-size="80"
+    fill="#ffffff"
+    text-anchor="middle"
+    letter-spacing="-2"
+  >Sovereign Creator</text>
+
+  <!-- Subtitle -->
+  <text
+    x="600"
+    y="375"
+    font-family="'Helvetica Neue', Arial, sans-serif"
+    font-weight="400"
+    font-size="28"
+    fill="#7F77DD"
+    text-anchor="middle"
+    letter-spacing="1"
+  >AI Short-Form Video Generator</text>
+
+  <!-- Bottom accent dots -->
+  <circle cx="570" cy="430" r="4" fill="#534AB7" opacity="0.6"/>
+  <circle cx="590" cy="430" r="4" fill="#534AB7" opacity="0.8"/>
+  <circle cx="610" cy="430" r="4" fill="#534AB7"/>
+  <circle cx="630" cy="430" r="4" fill="#534AB7" opacity="0.8"/>
+  <circle cx="650" cy="430" r="4" fill="#534AB7" opacity="0.6"/>
+</svg>
