@@ -16,7 +16,7 @@ export const metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://sovergin-creator.vercel.app/og-image.png',
+        url: 'https://sovergin-creator.vercel.app/og-image.svg',
         width: 1200,
         height: 630,
         alt: 'Sovereign Creator',
@@ -27,7 +27,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Sovereign Creator — AI Short-Form Video Generator',
     description: 'Create viral short-form videos with AI in seconds',
-    images: ['https://sovergin-creator.vercel.app/og-image.png'],
+    images: ['https://sovergin-creator.vercel.app/og-image.svg'],
   },
 }
 
