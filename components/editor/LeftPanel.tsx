@@ -45,6 +45,31 @@ export function LeftPanel() {
   const resetProject = useVideoStore((s) => s.resetProject)
 
   const [error, setError] = useState<string | null>(null)
+  const [bgTab, setBgTab] = useState<'mp4' | 'youtube'>('mp4')
+  const [ytUrl, setYtUrl] = useState('')
+  const [ytLoading, setYtLoading] = useState(false)
+  const [ytError, setYtError] = useState<string | null>(null)
+
+  async function handleYtFetch() {
+    if (!ytUrl.trim()) return
+    setYtLoading(true)
+    setYtError(null)
+    try {
+      const res = await fetch('/api/youtube', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: ytUrl.trim() }),
+      })
+      const data = await res.json() as { videoUrl?: string; error?: string }
+      if (!res.ok) throw new Error(data.error ?? 'Failed to fetch YouTube video')
+      setCustomBackgroundUrl(data.videoUrl ?? '')
+      setBackgroundTheme('custom')
+    } catch (e) {
+      setYtError(e instanceof Error ? e.message : 'Something went wrong')
+    } finally {
+      setYtLoading(false)
+    }
+  }
 
   const isGenerating = STEP_ORDER.includes(jobStatus as JobStatus)
   const canGenerate = script.trim().length > 0 && !isGenerating
@@ -169,29 +194,101 @@ export function LeftPanel() {
           })}
         </div>
         <div style={{ marginTop: '12px' }}>
-          <p style={{ fontSize: '11px', color: '#555', marginBottom: '6px', margin: '0 0 6px 0' }}>
-            Or paste your own video URL (.mp4)
-          </p>
-          <input
-            type="text"
-            value={customBackgroundUrl}
-            onChange={(e) => setCustomBackgroundUrl(e.target.value)}
-            placeholder="https://your-video.mp4"
-            style={{
-              width: '100%',
-              background: customBackgroundUrl.trim() ? '#1a1a3a' : '#0f0f0f',
-              border: `1px solid ${customBackgroundUrl.trim() ? '#534AB7' : '#2a2a2a'}`,
-              borderRadius: '8px', color: '#fff', fontSize: '13px',
-              padding: '8px 12px', outline: 'none', boxSizing: 'border-box',
-            }}
-          />
-          {customBackgroundUrl.trim() && (
-            <button onClick={() => setCustomBackgroundUrl('')} style={{
-              marginTop: '4px', fontSize: '11px', color: '#ff6b6b',
-              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-            }}>
-              Clear and use theme instead
-            </button>
+          {/* Tab toggle */}
+          <div style={{ display: 'flex', gap: '4px', marginBottom: '10px' }}>
+            {(['mp4', 'youtube'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => { setBgTab(tab); setYtError(null) }}
+                style={{
+                  flex: 1,
+                  padding: '5px 0',
+                  background: bgTab === tab ? '#1e1a3a' : '#0f0f0f',
+                  border: `1px solid ${bgTab === tab ? '#534AB7' : '#2a2a2a'}`,
+                  borderRadius: '6px',
+                  color: bgTab === tab ? '#7F77DD' : '#666',
+                  fontSize: '11px',
+                  fontWeight: bgTab === tab ? 600 : 400,
+                  cursor: 'pointer',
+                }}
+              >
+                {tab === 'mp4' ? 'Direct MP4' : 'YouTube'}
+              </button>
+            ))}
+          </div>
+
+          {bgTab === 'mp4' && (
+            <>
+              <input
+                type="text"
+                value={customBackgroundUrl}
+                onChange={(e) => setCustomBackgroundUrl(e.target.value)}
+                placeholder="https://your-video.mp4"
+                style={{
+                  width: '100%',
+                  background: customBackgroundUrl.trim() ? '#1a1a3a' : '#0f0f0f',
+                  border: `1px solid ${customBackgroundUrl.trim() ? '#534AB7' : '#2a2a2a'}`,
+                  borderRadius: '8px', color: '#fff', fontSize: '13px',
+                  padding: '8px 12px', outline: 'none', boxSizing: 'border-box',
+                }}
+              />
+              {customBackgroundUrl.trim() && (
+                <button onClick={() => setCustomBackgroundUrl('')} style={{
+                  marginTop: '4px', fontSize: '11px', color: '#ff6b6b',
+                  background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                }}>
+                  Clear and use theme instead
+                </button>
+              )}
+            </>
+          )}
+
+          {bgTab === 'youtube' && (
+            <>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <input
+                  type="text"
+                  value={ytUrl}
+                  onChange={(e) => { setYtUrl(e.target.value); setYtError(null) }}
+                  placeholder="https://youtube.com/watch?v=..."
+                  style={{
+                    flex: 1,
+                    background: '#0f0f0f',
+                    border: `1px solid ${ytError ? '#7f1d1d' : '#2a2a2a'}`,
+                    borderRadius: '8px', color: '#fff', fontSize: '12px',
+                    padding: '8px 10px', outline: 'none', boxSizing: 'border-box',
+                  }}
+                />
+                <button
+                  onClick={handleYtFetch}
+                  disabled={ytLoading || !ytUrl.trim()}
+                  style={{
+                    background: ytLoading ? '#2a2a2a' : '#534AB7',
+                    border: 'none', borderRadius: '8px',
+                    color: ytLoading ? '#555' : '#fff',
+                    fontSize: '12px', fontWeight: 600,
+                    padding: '0 12px', cursor: ytLoading || !ytUrl.trim() ? 'not-allowed' : 'pointer',
+                    whiteSpace: 'nowrap', flexShrink: 0,
+                  }}
+                >
+                  {ytLoading ? '...' : 'Fetch'}
+                </button>
+              </div>
+              {ytError && (
+                <p style={{ fontSize: '11px', color: '#ff6b6b', marginTop: '6px' }}>{ytError}</p>
+              )}
+              {!ytError && customBackgroundUrl.trim() && bgTab === 'youtube' && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px' }}>
+                  <span style={{ fontSize: '11px', color: '#1D9E75' }}>✓ Video URL fetched</span>
+                  <button onClick={() => { setCustomBackgroundUrl(''); setYtUrl('') }} style={{
+                    fontSize: '11px', color: '#ff6b6b',
+                    background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                  }}>
+                    Clear
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
