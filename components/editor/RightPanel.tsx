@@ -71,6 +71,8 @@ const POSITION_OPTIONS: CaptionStyle['position'][] = ['top', 'middle', 'bottom']
 const ANIMATION_OPTIONS: CaptionStyle['animation'][] = ['none', 'pop', 'bounce', 'shake', 'zoom']
 const WORDS_PER_GROUP: CaptionStyle['wordsPerGroup'][] = [1, 2, 3]
 
+const HIGHLIGHT_PRESETS = ['#FFDD00', '#FF6B00', '#FF0000', '#FF00FF', '#00FFFF', '#00FF00', '#FFFFFF', '#534AB7']
+
 const FONTS: { family: string; label: string }[] = [
   { family: 'Inter',            label: 'Inter'            },
   { family: 'Montserrat',       label: 'Montserrat'       },
@@ -289,6 +291,68 @@ export function RightPanel() {
             </ToggleButton>
           ))}
         </div>
+      </section>
+
+      <Divider />
+
+      {/* SECTION G — Highlight Color */}
+      <section style={{ padding: '20px 16px' }}>
+        <SectionLabel>Highlight Color</SectionLabel>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
+          {HIGHLIGHT_PRESETS.map((color) => {
+            const selected = captionStyle.highlightColor === color
+            return (
+              <button
+                key={color}
+                onClick={() => setCaptionStyle({ highlightColor: color })}
+                title={color}
+                style={{
+                  width: '32px', height: '32px',
+                  borderRadius: '50%',
+                  background: color,
+                  border: 'none',
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                  outline: selected ? '2px solid #fff' : '2px solid transparent',
+                  outlineOffset: '2px',
+                  boxShadow: selected ? '0 0 0 1px #534AB7' : 'none',
+                  transition: 'outline 0.1s ease',
+                }}
+              />
+            )
+          })}
+          {/* Custom color picker */}
+          <label
+            title="Custom color"
+            style={{
+              width: '32px', height: '32px',
+              borderRadius: '50%',
+              border: '2px dashed #444',
+              cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              overflow: 'hidden',
+              flexShrink: 0,
+              position: 'relative',
+            }}
+          >
+            <input
+              type="color"
+              value={captionStyle.highlightColor}
+              onChange={(e) => setCaptionStyle({ highlightColor: e.target.value })}
+              style={{
+                position: 'absolute',
+                width: '200%', height: '200%',
+                top: '-50%', left: '-50%',
+                opacity: 0,
+                cursor: 'pointer',
+              }}
+            />
+            <span style={{ fontSize: '16px', lineHeight: 1, color: '#666', pointerEvents: 'none' }}>+</span>
+          </label>
+        </div>
+        <p style={{ fontSize: '11px', color: '#555', marginTop: '8px' }}>
+          Current: <span style={{ color: captionStyle.highlightColor, fontWeight: 600 }}>{captionStyle.highlightColor}</span>
+        </p>
       </section>
     </div>
   )
