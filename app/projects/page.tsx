@@ -52,10 +52,12 @@ export default function ProjectsPage() {
   return (
     <main
       style={{
-        minHeight: '100vh',
+        height: '100%',
+        overflowY: 'auto',
         background: '#080808',
         color: '#fff',
         fontFamily: 'Inter, sans-serif',
+        paddingBottom: '40px',
       }}
     >
       <header
