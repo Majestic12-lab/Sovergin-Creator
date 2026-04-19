@@ -55,6 +55,9 @@ export default function HomePage() {
             Sovereign Creator
           </span>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+            <Link href="/pricing" style={{ fontSize: 14, color: '#888', padding: '8px 4px' }}>
+              Pricing
+            </Link>
             <Link href="/studio">
               <button
                 onMouseEnter={() => setSignInHovered(true)}
