@@ -2,6 +2,7 @@
 
 import { useEffect, useCallback, useState } from 'react'
 import Link from 'next/link'
+import { UserButton } from '@clerk/nextjs'
 import { useVideoStore } from '@/store/useVideoStore'
 import { LeftPanel } from '@/components/editor/LeftPanel'
 import { CenterPreview } from '@/components/editor/CenterPreview'
@@ -157,58 +158,65 @@ export default function StudioPage() {
       {/* Top bar */}
       <header
         style={{
-          height: '48px',
-          borderBottom: '1px solid #2a2a2a',
+          height: '56px',
+          borderBottom: '1px solid #1e1e1e',
+          boxShadow: '0 1px 0 #2a2a2a',
           display: 'flex',
           alignItems: 'center',
           padding: '0 20px',
-          gap: '12px',
+          gap: '16px',
           flexShrink: 0,
         }}
       >
-        <span style={{ color: '#7F77DD', fontWeight: 700 }}>Sovereign Creator</span>
-        <span style={{ color: '#555', fontSize: '12px' }}>Studio</span>
+        <span style={{ color: '#7F77DD', fontWeight: 700, fontSize: '15px' }}>Sovereign Creator</span>
+        <span style={{ color: '#444', fontSize: '13px' }}>Studio</span>
+
         <Link
           href="/projects"
           style={{
             color: '#888',
-            fontSize: '12px',
+            fontSize: '13px',
             textDecoration: 'none',
-            marginLeft: '12px',
+            padding: '4px 10px',
+            borderRadius: '6px',
+            border: '1px solid #2a2a2a',
+            transition: 'color 0.15s ease',
           }}
         >
           Projects
         </Link>
 
-        {jobStatus === 'complete' && (
-          <button
-            onClick={renderState.phase === 'idle' ? handleDownload : undefined}
-            disabled={renderState.phase === 'rendering'}
-            title={renderState.phase === 'error' ? renderState.message : ''}
-            style={{
-              marginLeft: 'auto',
-              background: renderState.phase === 'error' ? '#7f1d1d' : '#534AB7',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '6px',
-              padding: '0 14px',
-              height: '30px',
-              fontSize: '12px',
-              fontWeight: 600,
-              cursor: renderState.phase === 'rendering' ? 'not-allowed' : 'pointer',
-              opacity: renderState.phase === 'rendering' ? 0.7 : 1,
-              whiteSpace: 'nowrap',
-              transition: 'opacity 0.2s ease',
-            }}
-          >
-            {renderState.phase === 'idle' && 'Download Video'}
-            {renderState.phase === 'rendering' &&
-              (renderState.progress > 0
-                ? `Rendering ${Math.round(renderState.progress * 100)}%...`
-                : 'Rendering...')}
-            {renderState.phase === 'error' && 'Error - hover for details'}
-          </button>
-        )}
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {jobStatus === 'complete' && (
+            <button
+              onClick={renderState.phase === 'idle' ? handleDownload : undefined}
+              disabled={renderState.phase === 'rendering'}
+              title={renderState.phase === 'error' ? renderState.message : ''}
+              style={{
+                background: renderState.phase === 'error' ? '#7f1d1d' : '#534AB7',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '6px',
+                padding: '0 14px',
+                height: '32px',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: renderState.phase === 'rendering' ? 'not-allowed' : 'pointer',
+                opacity: renderState.phase === 'rendering' ? 0.7 : 1,
+                whiteSpace: 'nowrap',
+                transition: 'opacity 0.2s ease',
+              }}
+            >
+              {renderState.phase === 'idle' && 'Download Video'}
+              {renderState.phase === 'rendering' &&
+                (renderState.progress > 0
+                  ? `Rendering ${Math.round(renderState.progress * 100)}%...`
+                  : 'Rendering...')}
+              {renderState.phase === 'error' && 'Error - hover for details'}
+            </button>
+          )}
+          <UserButton />
+        </div>
       </header>
 
       {/* Main workspace */}

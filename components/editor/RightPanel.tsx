@@ -73,10 +73,14 @@ const WORDS_PER_GROUP: CaptionStyle['wordsPerGroup'][] = [1, 2, 3]
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label style={{ fontSize: '12px', fontWeight: 600, color: '#888', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+    <label style={{ fontSize: '11px', fontWeight: 600, color: '#666', letterSpacing: '0.07em', textTransform: 'uppercase' }}>
       {children}
     </label>
   )
+}
+
+function Divider() {
+  return <div style={{ borderTop: '1px solid #222', margin: '0 -16px' }} />
 }
 
 function ToggleButton({
@@ -123,13 +127,13 @@ export function RightPanel() {
         borderLeft: '1px solid #2a2a2a',
         display: 'flex',
         flexDirection: 'column',
-        gap: '24px',
-        padding: '24px 16px',
+        gap: '0',
+        padding: '0',
         overflowY: 'auto',
       }}
     >
       {/* SECTION A — Presets */}
-      <section>
+      <section style={{ padding: '20px 16px' }}>
         <SectionLabel>Caption style</SectionLabel>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '8px' }}>
           {PRESETS.map((preset) => {
@@ -175,8 +179,10 @@ export function RightPanel() {
         </div>
       </section>
 
+      <Divider />
+
       {/* SECTION B — Font size */}
-      <section>
+      <section style={{ padding: '20px 16px' }}>
         <SectionLabel>Size: {captionStyle.fontSize}px</SectionLabel>
         <input
           type="range"
@@ -189,8 +195,10 @@ export function RightPanel() {
         />
       </section>
 
+      <Divider />
+
       {/* SECTION C — Words per group */}
-      <section>
+      <section style={{ padding: '20px 16px' }}>
         <SectionLabel>Words per group</SectionLabel>
         <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
           {WORDS_PER_GROUP.map((n) => (
@@ -205,8 +213,10 @@ export function RightPanel() {
         </div>
       </section>
 
+      <Divider />
+
       {/* SECTION D — Position */}
-      <section>
+      <section style={{ padding: '20px 16px' }}>
         <SectionLabel>Position</SectionLabel>
         <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
           {POSITION_OPTIONS.map((pos) => (
@@ -221,8 +231,10 @@ export function RightPanel() {
         </div>
       </section>
 
+      <Divider />
+
       {/* SECTION E — Animation */}
-      <section>
+      <section style={{ padding: '20px 16px' }}>
         <SectionLabel>Animation</SectionLabel>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
           {ANIMATION_OPTIONS.map((anim) => (

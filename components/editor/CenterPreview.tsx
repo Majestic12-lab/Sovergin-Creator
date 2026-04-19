@@ -50,13 +50,31 @@ export function CenterPreview() {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '12px',
-            color: '#888',
+            gap: '16px',
+            background: '#0d0d0d',
           }}
         >
-          <p style={{ fontSize: '14px' }}>Your preview will appear here</p>
-          <p style={{ fontSize: '12px', color: '#555' }}>
-            Fill in the script and click Generate Video
+          <div
+            style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: '50%',
+              background: '#1e1a3a',
+              border: '2px solid #534AB7',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="#534AB7">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+          <p style={{ fontSize: '15px', fontWeight: 600, color: '#ccc', margin: 0 }}>
+            Generate your first video
+          </p>
+          <p style={{ fontSize: '12px', color: '#444', margin: 0, textAlign: 'center', lineHeight: 1.5 }}>
+            Fill in a script on the left<br />and click Generate Video
           </p>
         </div>
       ) : (

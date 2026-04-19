@@ -42,6 +42,7 @@ export function LeftPanel() {
   const setCustomBackgroundUrl = useVideoStore((s) => s.setCustomBackgroundUrl)
   const setJobStatus = useVideoStore((s) => s.setJobStatus)
   const setGenerationResult = useVideoStore((s) => s.setGenerationResult)
+  const resetProject = useVideoStore((s) => s.resetProject)
 
   const [error, setError] = useState<string | null>(null)
 
@@ -83,9 +84,27 @@ export function LeftPanel() {
     <div style={{
       width: '320px', minWidth: '320px', height: '100%',
       background: '#1a1a1a', borderRight: '1px solid #2a2a2a',
-      display: 'flex', flexDirection: 'column', gap: '24px',
-      padding: '24px 16px', overflowY: 'auto',
+      display: 'flex', flexDirection: 'column', gap: '28px',
+      padding: '20px 16px', overflowY: 'auto',
     }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontSize: '13px', fontWeight: 600, color: '#ccc' }}>Script Settings</span>
+        <button
+          onClick={resetProject}
+          style={{
+            background: 'none',
+            border: '1px solid #2a2a2a',
+            borderRadius: '6px',
+            color: '#888',
+            fontSize: '12px',
+            padding: '4px 10px',
+            cursor: 'pointer',
+          }}
+        >
+          New Video
+        </button>
+      </div>
+
       <section>
         <label style={{ fontSize: '12px', fontWeight: 600, color: '#888', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
           Your script
