@@ -18,6 +18,7 @@ export default function ProjectsPage() {
   const [projects, setProjects] = useState<VideoProject[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState<string | null>(null)
 
   useEffect(() => {
     if (!isLoaded) return
@@ -35,6 +36,18 @@ export default function ProjectsPage() {
         setLoading(false)
       })
   }, [isLoaded])
+
+  async function handleDelete(id: string) {
+    if (!confirm('Delete this project? This cannot be undone.')) return
+    setDeleting(id)
+    try {
+      const r = await fetch(`/api/projects/${id}`, { method: 'DELETE' })
+      if (!r.ok) throw new Error('Delete failed')
+      setProjects((prev) => prev.filter((p) => p.id !== id))
+    } finally {
+      setDeleting(null)
+    }
+  }
 
   return (
     <main
@@ -153,6 +166,49 @@ export default function ProjectsPage() {
                       day: 'numeric',
                     })}
                   />
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                  <Link
+                    href="/studio"
+                    style={{
+                      flex: 1,
+                      background: '#534AB7',
+                      color: '#fff',
+                      borderRadius: '6px',
+                      padding: '0 10px',
+                      height: '28px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    Open in Studio
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(p.id)}
+                    disabled={deleting === p.id}
+                    style={{
+                      flex: 1,
+                      background: '#7f1d1d',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '0 10px',
+                      height: '28px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      cursor: deleting === p.id ? 'not-allowed' : 'pointer',
+                      opacity: deleting === p.id ? 0.6 : 1,
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {deleting === p.id ? 'Deleting…' : 'Delete'}
+                  </button>
                 </div>
               </div>
             ))}
