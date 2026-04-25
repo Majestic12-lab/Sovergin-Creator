@@ -20,7 +20,9 @@ export async function uploadAudioToR2(jobId: string, audioBuffer: Buffer): Promi
 }
 
 export function getPublicAudioUrl(jobId: string): string {
-  return `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${process.env.R2_BUCKET_NAME}/audio/${jobId}.mp3`
+  const base = process.env.R2_PUBLIC_URL
+    ?? `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${process.env.R2_BUCKET_NAME}`
+  return `${base}/audio/${jobId}.mp3`
 }
 
 export async function getAudioSignedUrl(jobId: string): Promise<string> {
