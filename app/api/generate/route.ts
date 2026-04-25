@@ -58,6 +58,7 @@ export async function POST(request: NextRequest) {
         console.error('DB save failed (non-fatal):', dbErr)
       }
     }
+    console.log('RETURNING r2AudioUrl:', r2AudioUrl)
     return NextResponse.json({
       jobId,
       words,
