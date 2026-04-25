@@ -15,11 +15,11 @@ const VOICES = [
 const THEMES = ['Minecraft', 'Subway Surfers', 'Reddit Dark', 'Abstract', 'Nature']
 const MAX_CHARS = 500
 
-const STEPS: { status: JobStatus; label: string }[] = [
-  { status: 'generating-script', label: 'Writing script...'     },
-  { status: 'generating-voice',  label: 'Generating voice...'   },
-  { status: 'fetching-clips',    label: 'Finding background...' },
-  { status: 'transcribing',      label: 'Building captions...'  },
+const STEPS: { status: JobStatus; label: string; estSeconds: number }[] = [
+  { status: 'generating-script', label: 'Writing script...',     estSeconds: 10 },
+  { status: 'generating-voice',  label: 'Generating voice...',   estSeconds: 20 },
+  { status: 'fetching-clips',    label: 'Finding background...', estSeconds: 10 },
+  { status: 'transcribing',      label: 'Building captions...',  estSeconds: 25 },
 ]
 const STEP_ORDER = STEPS.map((s) => s.status)
 
@@ -28,6 +28,20 @@ function stepIsDone(current: JobStatus, stepStatus: JobStatus): boolean {
 }
 function stepIsActive(current: JobStatus, stepStatus: JobStatus): boolean {
   return current === stepStatus
+}
+
+function getProgressPct(current: JobStatus): number {
+  const idx = STEP_ORDER.indexOf(current)
+  if (idx < 0) return 0
+  return Math.round((idx / STEPS.length) * 100)
+}
+
+function getTimeRemaining(current: JobStatus): string {
+  const idx = STEP_ORDER.indexOf(current)
+  if (idx < 0) return ''
+  const secs = STEPS.slice(idx).reduce((sum, s) => sum + s.estSeconds, 0)
+  if (secs >= 60) return `~${Math.ceil(secs / 60)} min`
+  return `~${secs} seconds`
 }
 
 export function LeftPanel() {
@@ -200,24 +214,96 @@ export function LeftPanel() {
         </div>
       </section>
 
+      <style>{`
+        @keyframes progress-pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.55; }
+        }
+      `}</style>
+
       <div style={{ marginTop: 'auto' }}>
         {isGenerating && (
-          <div style={{ marginBottom: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {STEPS.map((step) => {
-              const done = stepIsDone(jobStatus, step.status)
-              const active = stepIsActive(jobStatus, step.status)
-              return (
-                <div key={step.status} style={{ display: 'flex', alignItems: 'center', gap: '8px', opacity: done || active ? 1 : 0.3 }}>
-                  {done ? <Check size={14} color="#1D9E75" /> : (
-                    <Loader2 size={14} color={active ? '#7F77DD' : '#555'}
-                      style={{ animation: active ? 'spin 1s linear infinite' : 'none' }} />
-                  )}
-                  <span style={{ fontSize: '12px', color: done ? '#1D9E75' : active ? '#fff' : '#555' }}>
-                    {step.label}
-                  </span>
-                </div>
-              )
-            })}
+          <div style={{
+            marginBottom: '16px',
+            background: '#111',
+            border: '1px solid #1e1a3a',
+            borderRadius: '12px',
+            padding: '16px',
+          }}>
+            {/* Progress bar */}
+            <div style={{ marginBottom: '14px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '7px' }}>
+                <span style={{ fontSize: '11px', color: '#888', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                  Generating
+                </span>
+                <span style={{ fontSize: '12px', color: '#7F77DD', fontWeight: 700 }}>
+                  {getProgressPct(jobStatus)}%
+                </span>
+              </div>
+              <div style={{ height: '5px', background: '#1e1e2e', borderRadius: '3px', overflow: 'hidden' }}>
+                <div style={{
+                  height: '100%',
+                  width: `${getProgressPct(jobStatus)}%`,
+                  background: 'linear-gradient(90deg, #534AB7, #7F77DD)',
+                  borderRadius: '3px',
+                  transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                }} />
+              </div>
+            </div>
+
+            {/* Steps */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', marginBottom: '12px' }}>
+              {STEPS.map((step) => {
+                const done = stepIsDone(jobStatus, step.status)
+                const active = stepIsActive(jobStatus, step.status)
+                return (
+                  <div key={step.status} style={{
+                    display: 'flex', alignItems: 'center', gap: '8px',
+                    opacity: done || active ? 1 : 0.3,
+                    transition: 'opacity 0.3s ease',
+                  }}>
+                    {done ? (
+                      <Check size={13} color="#1D9E75" style={{ flexShrink: 0 }} />
+                    ) : (
+                      <Loader2 size={13} color={active ? '#7F77DD' : '#555'}
+                        style={{ flexShrink: 0, animation: active ? 'spin 1s linear infinite' : 'none' }} />
+                    )}
+                    <span style={{
+                      fontSize: '12px',
+                      color: done ? '#1D9E75' : active ? '#c8c4f8' : '#555',
+                      textDecoration: done ? 'line-through' : 'none',
+                      animation: active ? 'progress-pulse 1.6s ease-in-out infinite' : 'none',
+                      transition: 'color 0.3s ease',
+                    }}>
+                      {step.label}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Time remaining */}
+            <p style={{ fontSize: '11px', color: '#555', margin: '0 0 10px', fontStyle: 'italic' }}>
+              {getTimeRemaining(jobStatus)} remaining
+            </p>
+
+            {/* Cancel button */}
+            <button
+              onClick={() => { setJobStatus('idle'); setError(null) }}
+              style={{
+                width: '100%', padding: '7px',
+                background: 'transparent',
+                border: '1px solid #3a2030',
+                borderRadius: '6px',
+                color: '#e05555',
+                fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'border-color 0.2s',
+              }}
+            >
+              Cancel
+            </button>
           </div>
         )}
         {error && <p style={{ fontSize: '12px', color: '#ff6b6b', marginBottom: '8px' }}>{error}</p>}
